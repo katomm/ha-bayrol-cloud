@@ -159,7 +159,7 @@ def parse_pool_data(html: str) -> Dict[str, Any]:
         h1 = box.find("h1")
         if span and h1:
             # Extract the label before the unit
-            label_text = span.text.strip()
+            label_text = span.text.replace("\xa0", " ").strip()  # Normalize non-breaking spaces
             label_match = re.match(r'^([^[]+)', label_text)
             if label_match:
                 raw_label = label_match.group(1).strip()
