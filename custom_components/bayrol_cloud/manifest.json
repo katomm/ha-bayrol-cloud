@@ -1,13 +1,13 @@
 {
   "domain": "bayrol_cloud",
   "name": "Bayrol Cloud",
-  "documentation": "https://github.com/razem-io/ha-bayrol-cloud",
-  "issue_tracker": "https://github.com/razem-io/ha-bayrol-cloud/issues",
+  "documentation": "https://github.com/katomm/ha-bayrol-cloud",
+  "issue_tracker": "https://github.com/katomm/ha-bayrol-cloud/issues",
   "dependencies": [],
-  "codeowners": ["@razem-io"],
+  "codeowners": ["@katomm"],
   "requirements": ["beautifulsoup4==4.12.2"],
   "iot_class": "cloud_polling",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "config_flow": true,
   "license": "MIT"
 }
