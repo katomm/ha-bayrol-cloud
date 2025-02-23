@@ -164,7 +164,10 @@ def parse_pool_data(html: str) -> Dict[str, Any]:
             if label_match:
                 raw_label = label_match.group(1).strip()
                 # Map the raw label to standardized key
-                label = measurement_map.get(raw_label)
+                if raw_label.startswith("T"):
+                    label = "T"  # Normalize all temperature labels
+                else:
+                    label = measurement_map.get(raw_label, raw_label)  # Keep original if not mapped
                 if label:
                     value = h1.text.strip()
                     try:
