@@ -15,6 +15,7 @@ from homeassistant.const import (
     Platform,
 )
 from homeassistant.core import HomeAssistant
+from homeassistant.exceptions import ConfigEntryNotReady
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
 import homeassistant.helpers.config_validation as cv
 from homeassistant.helpers.update_coordinator import (
@@ -81,20 +82,27 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
             retry_count += 1
 
         if not login_success:
-            _LOGGER.error("Failed to perform initial login after %d attempts", max_retries)
-            return False
+            # Raise ConfigEntryNotReady so HA retries setup with backoff instead
+            # of giving up permanently. This notably happens when DNS is not ready
+            # yet during a reboot: setup fails once and the integration would
+            # otherwise stay dead until the next manual restart.
+            raise ConfigEntryNotReady(
+                f"Failed to perform initial login after {max_retries} attempts"
+            )
 
         # Verify we can get data
         conditional_log(_LOGGER, logging.DEBUG, "Verifying data access...", debug_mode=api.debug_mode)
         data = await api.get_data(entry.data[CONF_CID])
         if not data:
-            _LOGGER.error("Failed to get initial data")
-            return False
+            raise ConfigEntryNotReady("Failed to get initial data")
         conditional_log(_LOGGER, logging.DEBUG, "Initial data fetch successful: %s", data, debug_mode=api.debug_mode)
 
+    except ConfigEntryNotReady:
+        # Already a retryable setup error, let HA handle the backoff/retry.
+        raise
     except Exception as err:
         _LOGGER.error("Error during initial setup: %s", err)
-        return False
+        raise ConfigEntryNotReady(f"Error during initial setup: {err}") from err
 
     async def async_update_data():
         """Fetch data from API."""
