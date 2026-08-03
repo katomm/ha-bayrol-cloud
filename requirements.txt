@@ -1,3 +1,4 @@
 aiohttp>=3.8.0
 beautifulsoup4>=4.12.0
-pytest-homeassistant-custom-component>=0.13.0
+# Pinned so CI resolves the same Home Assistant test version every run.
+pytest-homeassistant-custom-component==0.13.205
