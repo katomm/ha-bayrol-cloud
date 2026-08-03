@@ -2,6 +2,12 @@
 
 # Bayrol Cloud Integration for Home Assistant
 
+> **Maintained fork.** This is an actively maintained fork of the original
+> [`razem-io/ha-bayrol-cloud`](https://github.com/razem-io/ha-bayrol-cloud),
+> which is no longer being updated. All credit for the original work goes to
+> [@razem-io](https://github.com/razem-io). Install from `katomm/ha-bayrol-cloud`
+> (see [Installation](#installation)) to get fixes and updates.
+
 ⚠️ **BETA STATUS**: This integration is currently in beta. Please report any issues you encounter.
 
 This is a Home Assistant Custom Component for the Bayrol Cloud. It allows you to monitor and control your pool's parameters and equipment directly in Home Assistant.
@@ -16,7 +22,7 @@ Currently tested with:
 - BAYROL PoolManager Chlor (Cl)
 - BAYROL PoolRelax CI
 
-Have a different Bayrol device? Please [open an issue](https://github.com/razem-io/ha-bayrol-cloud/issues) to help expand device support! When opening an issue, please include:
+Have a different Bayrol device? Please [open an issue](https://github.com/katomm/ha-bayrol-cloud/issues) to help expand device support! When opening an issue, please include:
 - Your device model
 - HTML response of https://www.bayrol-poolaccess.de/webview/getdata.php?cid=<your-cid>
 - Any specific features or parameters your device supports
@@ -62,7 +68,7 @@ Have a different Bayrol device? Please [open an issue](https://github.com/razem-
    - Click on "Integrations"
    - Click the three dots in the top right corner
    - Select "Custom repositories"
-   - Add `https://github.com/razem-io/ha-bayrol-cloud` as the repository URL
+   - Add `https://github.com/katomm/ha-bayrol-cloud` as the repository URL
    - Select "Integration" as the category
 3. Click "Install"
 4. Restart Home Assistant
@@ -128,7 +134,7 @@ switch.bayrol_cloud_12345_debug:
 
 ### Prerequisites
 
-- Python 3.9 or higher
+- Python 3.12 or higher
 - Home Assistant development environment
 - SSH access to your Home Assistant instance
 - `rsync` installed on your development machine
@@ -159,9 +165,22 @@ The script will:
 - Restart Home Assistant to apply changes
 - Wait for Home Assistant to come back online
 
-### Testing
+### Unit Tests
 
-A test script (`test_api.py`) is provided to verify the API connection before deploying to Home Assistant:
+The unit tests run offline (no credentials or network needed) and cover the HTML
+parsers and the integration setup/retry behaviour. They also run in CI on every
+push and pull request.
+
+```bash
+pip install -r requirements.txt
+pytest
+```
+
+### Live API Test Script
+
+A test script (`test_api.py`) is provided to verify the live API connection
+before deploying to Home Assistant. Unlike the unit tests, this one talks to the
+Bayrol Cloud and needs real credentials:
 
 ```bash
 python test_api.py --username your@email.com --password yourpassword --cid yourcid
@@ -206,7 +225,7 @@ The debug logs will show:
 
 ## Support
 
-For bugs, feature requests, or to add support for new devices, please [open an issue](https://github.com/razem-io/ha-bayrol-cloud/issues) on GitHub.
+For bugs, feature requests, or to add support for new devices, please [open an issue](https://github.com/katomm/ha-bayrol-cloud/issues) on GitHub.
 
 ## License
 
